@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CyberWatch AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:320px;background:#0f1b2d;color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}
+
+.header{
+  background:#0d2e7a;
+  padding:12px 15px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #1e3a8a;
+}
+.logo{display:flex;align-items:center;gap:9px}
+.logo svg{width:28px;height:28px;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:800;color:#fff}
+.logo-text b{color:#3b82f6}
+.open-link{font-size:10px;color:rgba(255,255,255,0.45);text-decoration:none}
+.open-link:hover{color:#60c8f0}
+
+.tabs{display:flex;border-bottom:1px solid #1e3a5f}
+.tab{flex:1;padding:10px;font-size:12px;font-weight:600;color:#64748b;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:inherit}
+.tab.active{color:#3b82f6;border-bottom-color:#3b82f6;background:#0a1628}
+
+.body{padding:13px}
+.url-input{
+  width:100%;background:#0a1628;
+  border:1.5px solid #1e3a5f;
+  border-radius:8px;padding:9px 11px;
+  font-size:12px;color:#f1f5f9;outline:none;
+  font-family:inherit;transition:border-color 0.2s;margin-bottom:9px
+}
+.url-input:focus{border-color:#3b82f6}
+.url-input::placeholder{color:#334155}
+.scan-btn{
+  width:100%;background:#1a56db;color:#fff;
+  border:none;padding:10px;border-radius:8px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:background 0.2s;
+}
+.scan-btn:hover{background:#1240a8}
+.scan-btn:disabled{background:#1e3a5f;color:#475569;cursor:not-allowed}
+
+.loading{display:none;padding:22px 14px;text-align:center}
+.spinner{width:26px;height:26px;border:2.5px solid #1e3a5f;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:12px;color:#64748b}
+
+.result{display:none;padding:0 13px 13px}
+.result-top{display:flex;height:10px}
+.result-bar{border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;border-left:3px solid transparent}
+.result-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.result-verdict{font-size:11px;color:#94a3b8;line-height:1.4}
+.result-score{font-size:26px;font-weight:900;flex-shrink:0}
+.meter-track{height:4px;background:#1e3a5f;border-radius:4px;overflow:hidden;margin-bottom:10px}
+.meter-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.result-summary{font-size:12px;color:#94a3b8;line-height:1.65;margin-bottom:9px}
+.flags-title{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:5px}
+.flag-item{display:flex;align-items:flex-start;gap:6px;font-size:11px;color:#94a3b8;margin-bottom:5px;line-height:1.4}
+.flag-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.full-btn{display:block;background:#1a56db;color:#fff;text-decoration:none;text-align:center;padding:9px;border-radius:8px;font-size:12px;font-weight:700;margin-top:10px}
+.full-btn:hover{background:#1240a8}
+.error-msg{padding:18px 13px;font-size:12px;color:#ef4444;text-align:center;line-height:1.5}
+
+.footer{padding:8px 14px;border-top:1px solid #0f1b2d;text-align:center;font-size:10px;color:#1e3a5f}
+.footer a{color:#1e3a5f;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <!-- Same C arc logo as the site favicon -->
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" rx="40" fill="#0a1628"/>
+      <path d="M138 62 A52 52 0 1 0 138 138" fill="none" stroke="#3b82f6" stroke-width="22" stroke-linecap="round"/>
+      <rect x="108" y="118" width="52" height="30" rx="15" fill="#dc2626"/>
+      <text x="134" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="900" fill="white">AI</text>
+    </svg>
+    <div class="logo-text">CyberWatch <b>AI</b></div>
+  </div>
+  <a class="open-link" href="https://cyberwatchai.com" target="_blank">Open full site</a>
+</div>
+
+<div class="tabs">
+  <button class="tab active">URL / Link</button>
+</div>
+
+<div class="body" id="input-area">
+  <input class="url-input" id="url-input" type="url" placeholder="https://paste-link-here.com" />
+  <button class="scan-btn" id="scan-btn" onclick="scanUrl()">Scan Now</button>
+</div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-txt" id="loading-txt">Scanning for threats...</div>
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="footer"><a href="https://cyberwatchai.com" target="_blank">cyberwatchai.com</a></div>
+
+<script src="popup.js"></script>
+</body>
+</html>
