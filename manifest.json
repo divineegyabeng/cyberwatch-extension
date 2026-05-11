@@ -31,8 +31,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://cyberwatchai.com/*",
-    "<all_urls>"
+    "https://cyberwatchai.com/*"
   ],
   "action": {
     "default_popup": "popup.html",
