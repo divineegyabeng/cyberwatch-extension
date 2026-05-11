@@ -98,6 +98,9 @@ function scanUrl(){
 // Enter key
 document.getElementById('url-input').addEventListener('keydown', e => { if(e.key==='Enter') scanUrl(); });
 
+// Attach button click via JS (inline onclick blocked by CSP in MV3)
+document.getElementById('scan-btn').addEventListener('click', scanUrl);
+
 // Auto-fill current tab URL on open
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const url = tabs[0]?.url;
