@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "CyberWatch AI — Scam Detector",
+  "name": "CyberWatch AI \u2014 Scam Detector",
   "version": "1.0.0",
   "description": "Right-click any link to instantly check if it's a scam. Powered by CyberWatch AI.",
   "icons": {
@@ -13,9 +13,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ]
     }
   ],
   "permissions": [
@@ -35,5 +41,8 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://cyberwatchai.com"
   }
 }
