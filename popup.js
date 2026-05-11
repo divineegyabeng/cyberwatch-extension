@@ -61,6 +61,7 @@ async function doScan(url){
   const iv = setInterval(()=>{ i++; if(i<texts.length) document.getElementById('loading-txt').textContent=texts[i]; }, 1100);
 
   try {
+    console.log('Fetching:', API_URL, 'for URL:', url);
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -70,21 +71,26 @@ async function doScan(url){
       })
     });
     clearInterval(iv);
+    console.log('Response status:', res.status);
 
-    if(res.status === 429){ showError('Daily scan limit reached. Visit cyberwatchai.com to sign in for more.'); return; }
+    if(res.status === 429){ showError('Daily scan limit reached. Visit cyberwatchai.com to sign in for more scans.'); return; }
     if(!res.ok) throw new Error('API returned ' + res.status);
 
     const data = await res.json();
     const raw = data.content.map(b => b.text||'').join('');
     const cleaned = raw.replace(/```json|```/g,'').trim();
     const match = cleaned.match(/\{[\s\S]*\}/);
-    if(!match) throw new Error('Could not parse response');
+    if(!match) throw new Error('Could not parse response: ' + cleaned.substring(0,80));
     showResult(JSON.parse(match[0]));
 
   } catch(err){
     clearInterval(iv);
-    console.error('Scan error:', err);
-    showError('Could not reach CyberWatch AI. Check your connection and try again.');
+    console.error('Scan error:', err.name, err.message);
+    if(err.name === 'TypeError' && err.message.includes('fetch')){
+      showError('Connection blocked. Make sure you reloaded the extension after the last update.');
+    } else {
+      showError('Could not reach CyberWatch AI: ' + err.message);
+    }
   }
 }
 
