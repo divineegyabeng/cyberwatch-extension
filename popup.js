@@ -73,7 +73,21 @@ async function doScan(url){
     clearInterval(iv);
     console.log('Response status:', res.status);
 
-    if(res.status === 429){ showError('Daily scan limit reached. Visit cyberwatchai.com to sign in for more scans.'); return; }
+    if(res.status === 429){
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('input-area').style.display = 'none';
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').innerHTML = `
+        <div style="text-align:center;padding:16px 0 8px">
+          <div style="font-size:28px;margin-bottom:10px">🔒</div>
+          <div style="font-size:14px;font-weight:800;color:#f1f5f9;margin-bottom:6px">Daily limit reached</div>
+          <div style="font-size:12px;color:#94a3b8;line-height:1.6;margin-bottom:16px">You've used all your free scans for today. Upgrade to Pro for unlimited scans.</div>
+          <a href="https://cyberwatchai.com/#pricing" target="_blank" style="display:block;background:linear-gradient(135deg,#1a56db,#2563eb);color:#fff;text-decoration:none;padding:11px;border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;margin-bottom:8px">Upgrade to Pro — $1.99/mo</a>
+          <button onclick="resetUI()" style="width:100%;background:transparent;border:1px solid #1e3a5f;color:#64748b;padding:9px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit">Maybe later</button>
+        </div>
+      `;
+      return;
+    }
     if(!res.ok) throw new Error('API returned ' + res.status);
 
     const data = await res.json();
