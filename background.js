@@ -12,28 +12,35 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// Handle context menu clicks
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const url = info.linkUrl;
   if (!url) return;
-
-  // Inject content script first in case it's not loaded yet
   try {
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
     await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content.css'] });
-  } catch(e) { /* already injected */ }
-
+  } catch(e) {}
   chrome.tabs.sendMessage(tab.id, { type: 'SHOW_LOADING', url });
-
   try {
-    const result = await scanUrl(url);
+    const result = await doScan(url);
     chrome.tabs.sendMessage(tab.id, { type: 'SHOW_RESULT', result, url });
   } catch (err) {
-    chrome.tabs.sendMessage(tab.id, { type: 'SHOW_ERROR', message: 'Could not reach CyberWatch AI. Check your connection.' });
+    chrome.tabs.sendMessage(tab.id, { type: 'SHOW_ERROR', message: 'Could not reach CyberWatch AI.' });
   }
 });
 
-async function scanUrl(url) {
-  const response = await fetch(API_URL, {
+// Handle messages from popup — background does the fetch
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'SCAN_URL') {
+    doScan(msg.url)
+      .then(result => sendResponse({ ok: true, result }))
+      .catch(err => sendResponse({ ok: false, error: err.message, status: err.status }));
+    return true; // keep channel open for async response
+  }
+});
+
+async function doScan(url) {
+  const res = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -41,11 +48,22 @@ async function scanUrl(url) {
       messages: [{ role: 'user', content: `Analyse this URL: ${url}` }]
     })
   });
-  if (!response.ok) throw new Error('API error: ' + response.status);
-  const data = await response.json();
+
+  if (res.status === 429) {
+    const err = new Error('rate_limited');
+    err.status = 429;
+    throw err;
+  }
+  if (!res.ok) {
+    const err = new Error('API error ' + res.status);
+    err.status = res.status;
+    throw err;
+  }
+
+  const data = await res.json();
   const raw = data.content.map(b => b.text || '').join('');
   const cleaned = raw.replace(/```json|```/g, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('Bad response');
+  if (!match) throw new Error('parse_error');
   return JSON.parse(match[0]);
 }
