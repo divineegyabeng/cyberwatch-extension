@@ -15,17 +15,6 @@ Scams are getting smarter every day. Most people can't tell the difference betwe
 * Clear explanations so you understand why something might be dangerous
 * Works seamlessly without slowing down your browser
 
-## Screenshots
-
-### Extension Popup
-[Add screenshot of extension popup interface here]
-
-### Link Analysis
-[Add screenshot of link analysis result here]
-
-### Threat Warning
-[Add screenshot of threat warning/alert here]
-
 ## How to Use It
 
 1. Click the CyberWatch icon in your Chrome toolbar
