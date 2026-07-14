@@ -4,7 +4,7 @@ This is a Chrome extension that helps you spot phishing attempts and scams while
 
 ## Why I Built This
 
-Scams are getting smarter every day. Most people can't tell the difference between a legitimate message and a phishing attempt anymore. I wanted to make it easy for anyone to analyze suspicious links and messages right from their browser without needing to be a tech expert.
+Scams are getting smarter every day. Most people can't tell the difference between a legitimate message and a phishing attempt anymore. I wanted to make it easy for anyone to analyze suspicious links and messages directly from their browser.
 
 ## What It Does
 
@@ -14,6 +14,17 @@ Scams are getting smarter every day. Most people can't tell the difference betwe
 * Simple popup interface in your Chrome toolbar
 * Clear explanations so you understand why something might be dangerous
 * Works seamlessly without slowing down your browser
+
+## Screenshots
+
+### Extension Popup
+[Add screenshot of extension popup interface here]
+
+### Link Analysis
+[Add screenshot of link analysis result here]
+
+### Threat Warning
+[Add screenshot of threat warning/alert here]
 
 ## How to Use It
 
@@ -35,7 +46,7 @@ Visit cyberwatchai.com to see the full platform and get the extension.
 
 ## About This Project
 
-This extension is the browser interface for CyberWatch AI. The actual scam detection happens on the backend which is handled by the main CyberWatch platform. This repository contains just the extension code that makes it accessible from your browser.
+This extension is the browser interface for CyberWatch AI. The actual scam detection happens on the backend which is handled by the main CyberWatch platform. This repository contains just the extension code that integrates with the platform.
 
 ## License
 
